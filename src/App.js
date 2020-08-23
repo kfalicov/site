@@ -1,12 +1,22 @@
 import React from 'react';
-import './App.css';
+import { ThemeProvider } from 'styled-components';
+import { GlobalStyles } from './components/globalStyles';
+import { lightTheme, darkTheme } from './components/Themes';
+import { Banner } from './components/Banner';
 
 const App = () => {
-  return (
-    <div className="App">
-      test
-    </div>
-  );
-}
+    const [theme, setTheme] = React.useState('dark');
+    return (
+        <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
+            <GlobalStyles />
+            <div>
+                <Banner />
+                <button onClick={() => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'))}>
+                    toggle theme
+                </button>
+            </div>
+        </ThemeProvider>
+    );
+};
 
 export default App;
