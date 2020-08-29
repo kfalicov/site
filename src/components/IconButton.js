@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const StyledIconButton = styled.button`
     border-radius: 50%;
+    font-size: 1rem;
     height: 48px;
     width: 48px;
     line-height: 100%;

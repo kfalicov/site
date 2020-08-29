@@ -4,16 +4,17 @@ import styled from 'styled-components';
 import Chevron from '../../Icons/Chevron';
 
 const Header = styled.div.attrs((props) => ({
-    style: { height: `${(1 - props.scroll) * 100}%` },
+    style: { height: props.useSplash ? '100vh' : '56px' },
 }))`
-    min-height: 56px;
-    max-height: 100vh;
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1;
     padding: 4px;
     background: ${({ theme }) => theme.palette.background.paper};
+    transition: height ${({ theme }) => theme.duration.snail}
+        ${({ theme }) => theme.easing.easeInOutSine};
+    box-shadow: ${({ theme }) => theme.shadows[1]};
 `;
 
 const Relative = styled.div`
@@ -25,13 +26,14 @@ const Relative = styled.div`
 `;
 
 const Spacer = styled.div.attrs((props) => ({
-    style: { flexGrow: props.scroll >= 0.94 ? 0 : 1 },
+    style: { flexGrow: props.useSplash ? 1 : 0 },
 }))`
-    transition: flex-grow 140ms ${({ theme }) => theme.easing.easeInOutSine};
+    transition: flex-grow ${({ theme }) => theme.duration.snail}
+        ${({ theme }) => theme.easing.easeInOutSine};
 `;
 
 const SwipeUp = styled.div.attrs((props) => ({
-    style: { opacity: props.scroll ? 0 : 1 },
+    style: { opacity: props.useSplash ? 1 : 0 },
 }))`
     position: absolute;
     color: ${({ theme }) => theme.palette.text.secondary};
@@ -41,22 +43,23 @@ const SwipeUp = styled.div.attrs((props) => ({
     flex-direction: column;
     align-items: center;
     font-size: 2rem;
-    transition: opacity 140ms;
+    transition: opacity ${({ theme }) => theme.duration.slow}
+        ${({ theme }) => theme.easing.easeInOutSine};
 `;
 
-export const AppBar = ({ children, scroll, shrink }) => {
+export const AppBar = ({ children, useSplash, shrink }) => {
     return (
-        <Header scroll={scroll}>
+        <Header useSplash={useSplash}>
             <Relative>
-                <Spacer scroll={scroll} />
-                <Banner scroll={scroll} shrink={shrink} />
+                <Spacer useSplash={useSplash} />
+                <Banner useSplash={useSplash} shrink={shrink} />
 
-                <Spacer scroll={scroll} />
-                {children}
-                <SwipeUp scroll={scroll}>
+                <Spacer useSplash={useSplash} />
+                <SwipeUp useSplash={useSplash}>
                     <Chevron />
                     <p style={{ margin: '0.5em' }}>Scroll to get started</p>
                 </SwipeUp>
+                {children}
             </Relative>
         </Header>
     );

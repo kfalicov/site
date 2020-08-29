@@ -2,10 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Title = styled.div.attrs((props) => ({
-    style: { fontSize: `${Math.min((1 - Math.min(props.scroll / 0.94, 1)) * 7 + 3, 10)}rem` },
+    style: {
+        fontSize: props.useSplash ? '10rem' : '3rem',
+        gridColumn: `span ${props.useSplash ? 2 : 1}`,
+    },
 }))`
-    grid-column: span ${(props) => (props.scroll > 0.5 ? 1 : 2)};
     line-height: 65%;
+    transition: font-size ${({ theme }) => theme.duration.snail}
+        ${({ theme }) => theme.easing.easeInOutSine};
 `;
 const Subtitle = styled.div`
     font-size: 2rem;
@@ -15,17 +19,17 @@ const Subtitle = styled.div`
     align-self: end;
 `;
 
-const BaseBanner = ({ className, scroll }) => {
+const BaseBanner = ({ className, useSplash }) => {
     return (
         <div className={className}>
-            <Title scroll={scroll}>Site</Title>
+            <Title useSplash={useSplash}>Site</Title>
             <Subtitle>by kyle</Subtitle>
         </div>
     );
 };
 
 const StyledBanner = styled(BaseBanner)`
-    paddingtop: 6px;
+    padding: 6px 6px 2px 6px;
     display: inline-grid;
     grid-template-columns: auto auto 0;
     grid-row-gap: 0.33rem;

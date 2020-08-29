@@ -7,7 +7,6 @@ export const useIntersection = (root = null) => {
     const observer = useRef(
         new IntersectionObserver(
             (entries) => {
-                console.log(entries);
                 setIntersection(entries[0]);
             },
             { root: root ? root.current : undefined, threshold: 1 }

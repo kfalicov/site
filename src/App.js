@@ -1,5 +1,4 @@
 import React from 'react';
-import { useScrollPercentage } from 'react-scroll-percentage';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './components/globalStyles';
 import { lightTheme, darkTheme } from './components/Themes';
@@ -15,19 +14,19 @@ const DarkThemeButton = styled(IconButton)`
     top: 0;
 `;
 
-const AppBarSpacer = styled.div`
-    height: calc(100vh);
+const Content = styled.div`
+    height: 100vh;
     position: relative;
+    padding-top: 56px;
 `;
 
 const App = () => {
     const [theme, setTheme] = React.useState('dark');
-    const [ref, percentage] = useScrollPercentage();
     const [scrollRef, intersection] = useIntersection();
     return (
         <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
             <GlobalStyles />
-            <AppBar scroll={percentage}>
+            <AppBar useSplash={!intersection.isIntersecting}>
                 <DarkThemeButton
                     onClick={() => {
                         setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
@@ -36,11 +35,8 @@ const App = () => {
                     <Switch on={theme === 'light'} />
                 </DarkThemeButton>
             </AppBar>
-            <AppBarSpacer ref={scrollRef} />
-            <div ref={ref} />
-            <div style={{ width: '100%', height: '100vh' }}>
-                What is Site?{`${intersection.isIntersecting}`}
-            </div>
+            <Content></Content>
+            <div id="scrolltrigger" ref={scrollRef} style={{ height: 1 }}></div>
         </ThemeProvider>
     );
 };
