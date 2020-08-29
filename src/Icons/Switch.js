@@ -26,7 +26,7 @@ const Flicker = styled.rect`
 
 const Switch = ({ on }) => {
     return (
-        <svg width={24} height={24}>
+        <svg viewBox="0 0 24 24" width="1.5em" height="1.5em">
             <g id="layer1">
                 <Panel ry="1" y="3" x="6" height="18" width="12" id="rect12" />
                 <Flicker

@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Title = styled.div.attrs((props) => ({
-    style: { fontSize: `${Math.min((1 - props.scroll) * 6 + 4, 10)}rem` },
+    style: { fontSize: `${Math.min((1 - Math.min(props.scroll / 0.94, 1)) * 7 + 3, 10)}rem` },
 }))`
     grid-column: span ${(props) => (props.scroll > 0.5 ? 1 : 2)};
     line-height: 65%;
@@ -24,9 +24,8 @@ const BaseBanner = ({ className, scroll }) => {
     );
 };
 
-const StyledBanner = styled(BaseBanner).attrs((props) => ({
-    style: { paddingTop: props.scroll ? '6px' : '2rem' },
-}))`
+const StyledBanner = styled(BaseBanner)`
+    paddingtop: 6px;
     display: inline-grid;
     grid-template-columns: auto auto 0;
     grid-row-gap: 0.33rem;

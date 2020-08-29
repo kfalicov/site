@@ -18,7 +18,7 @@ export const lightTheme = {
             active: '#0000008A',
             paper: '#FFF',
         },
-        text: { default: '#000000DE', invert: '#FFFFFFDE' },
+        text: { default: '#000000DE', secondary: '#0000008A' },
     },
     ...baseTheme,
 };
@@ -31,7 +31,7 @@ export const darkTheme = {
             active: '#FFFFFF8A',
             paper: '#424242',
         },
-        text: { default: '#FFFFFFDE', invert: '#000000DE' },
+        text: { default: '#FFF', secondary: '#FFFFFFB3' },
     },
     ...baseTheme,
 };
