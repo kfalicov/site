@@ -1,9 +1,23 @@
 import { createGlobalStyle } from 'styled-components';
 export const GlobalStyles = createGlobalStyle`
   body {
-    background: ${({ theme }) => theme.body};
-    color: ${({ theme }) => theme.text};
-    font-family: 'Questrial', sans-serif;
-    transition: background 140ms cubic-bezier(0.61, 1, 0.88, 1), color 140ms cubic-bezier(0.61, 1, 0.88, 1);
+    background: ${({ theme }) => theme.palette.background.default};
+    color: ${({ theme }) => theme.palette.text.default};
+    transition: background 140ms ${({ theme }) => theme.easing.easeOutSine}, 
+      color 140ms ${({ theme }) => theme.easing.easeOutSine};
+  }
+  button {
+    background: transparent;
+    color: ${({ theme }) => theme.palette.text.default};
+    text-transform: uppercase;
+    &:hover{
+      background: ${({ theme }) => theme.palette.background.hover};
+    };
+    &:active{
+      background: ${({ theme }) => theme.palette.background.focus};
+    };
+  }
+  div{
+    box-sizing: border-box;
   }
   `;
