@@ -3,12 +3,14 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@popperjs/core": "^2.11.6",
         "d3": "^7.6.1",
         "eslint": "^6.6.0",
         "firebase": "^9.12.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-intersection-observer": "^8.27.1",
+        "react-popper": "^2.3.0",
         "react-scripts": "3.4.3",
         "react-scroll-percentage": "^4.2.0",
         "styled-components": "^5.1.1"
