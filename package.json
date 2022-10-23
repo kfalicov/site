@@ -13,7 +13,7 @@
         "react-popper": "^2.3.0",
         "react-scripts": "3.4.3",
         "react-scroll-percentage": "^4.2.0",
-        "styled-components": "^5.1.1"
+        "styled-components": "^5.3.6"
     },
     "devDependencies": {
         "@testing-library/jest-dom": "^4.2.4",
