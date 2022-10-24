@@ -5,8 +5,27 @@ import { lightTheme, darkTheme } from './components/Themes';
 import { AppBar } from './components/AppBar/AppBar';
 import { IconButton } from './components/IconButton';
 import { Switch } from './Icons';
-import { useIntersection } from './components/Utils/useIntersection';
+import { usePopper } from 'react-popper';
 import * as d3 from 'd3';
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app';
+import { getDatabase, ref, onValue } from 'firebase/database';
+import Graph from './components/Graph';
+// import { getAnalytics } from 'firebase/analytics';
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+    apiKey: 'AIzaSyC2ZsSMoUSJHRHXrIubmz0FTQuTfKG_eq8',
+    authDomain: 'site-by-kyle.firebaseapp.com',
+    databaseURL: 'https://site-by-kyle.firebaseio.com',
+    projectId: 'site-by-kyle',
+    storageBucket: 'site-by-kyle.appspot.com',
+    messagingSenderId: '311574117474',
+    appId: '1:311574117474:web:e824e80be06935b7e4253b',
+    measurementId: 'G-BJ9LRWZW6X',
+};
 
 const DarkThemeButton = styled(IconButton)`
     margin-left: auto;
@@ -16,6 +35,7 @@ const DarkThemeButton = styled(IconButton)`
 `;
 
 const Content = styled.div`
+    overflow: hidden;
     height: 100vh;
     position: relative;
     padding-top: 56px;
@@ -24,61 +44,51 @@ const Content = styled.div`
     align-items: center;
 `;
 
-const apps = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+const Presentation = styled.div`
+    position: fixed;
+    inset: 0;
+`;
+
+const Popover = styled.div`
+    background: ${({ theme }) => theme.palette.background.paper};
+    padding: 8px;
+    border-radius: 4px;
+    box-shadow: ${({ theme }) => theme.shadows[1]};
+    max-width: 328px;
+    display: ${(props) => (props.anchorEl ? undefined : 'none')};
+`;
 
 const App = () => {
     const [theme, setTheme] = React.useState('dark');
     // const [scrollRef, intersection] = useIntersection();
 
-    const [nodes, setNodes] = React.useState([]);
+    const [apps, setApps] = React.useState();
 
-    // re-create animation every time nodes change
-    const sim = React.useMemo(() => {
-        const simulation = d3
-            .forceSimulation()
-            .force('x', d3.forceX(0).strength(0.5))
-            .force('y', d3.forceY(0).strength(0.5))
-            .force('charge', d3.forceManyBody().strength(-50))
-            .force('collision', d3.forceCollide(50));
-        // update state on every frame
-        simulation.on('tick', () => {
-            setNodes([...simulation.nodes()]);
+    React.useEffect(() => {
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        onValue(ref(db, 'projects'), (e) => {
+            setApps(e.val());
         });
-
-        // copy nodes into simulation
-        simulation.nodes(apps.map((app) => ({ id: app })));
-        // slow down with a small alpha
-        simulation.alpha(0.1).restart();
-
-        return simulation;
-        // return () => simulation.stop();
+        // const analytics = getAnalytics(app);
     }, []);
 
-    const handleRender = React.useCallback(
-        (ref) => {
-            if (!ref) return;
-            setTimeout(() => {
-                d3.select(`#${ref.id}`)
-                    .selectAll('div')
-                    .data(sim.nodes())
-                    .call(
-                        d3
-                            .drag()
-                            // .on('start', () => sim.alpha(0.1).restart())
-                            .on('drag', (e, d) => {
-                                sim.alpha(0.1).restart();
-                                d.fx = e.x;
-                                d.fy = e.y;
-                            })
-                            .on('end', (_, d) => {
-                                d.fx = null;
-                                d.fy = null;
-                            })
-                    );
-            }, 0);
+    const openApp = React.useRef();
+    const [anchorEl, setAnchorEl] = React.useState();
+    const handleClick = React.useCallback(
+        (e, index) => {
+            const app = apps[index];
+            openApp.current = app;
+            setAnchorEl(e.currentTarget);
         },
-        [sim]
+        [apps]
     );
+
+    const popperRef = React.useRef();
+    const { styles, attributes, forceUpdate } = usePopper(anchorEl, popperRef.current);
+
+    console.log(styles, attributes);
 
     return (
         <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
@@ -92,33 +102,38 @@ const App = () => {
                     <Switch on={theme === 'light'} />
                 </DarkThemeButton>
             </AppBar>
-            <Content>
-                {/* <CircleParent style={{ borderRadius: '50%' }}>
-                    {apps.map((entry) => {
-                        return <CircleChild>{entry}</CircleChild>;
-                    })}
-                </CircleParent> */}
-                <div style={{ position: 'relative' }} id="network" ref={handleRender}>
-                    {nodes.map((node, index) => (
-                        <div
-                            key={node.id}
-                            style={{
-                                left: node.x,
-                                top: node.y,
-                                position: 'absolute',
-                                background: 'red',
-                                userSelect: 'none',
-                                fontSize: 72,
-                                // pointerEvents: 'none',
-                            }}
-                            onClick={(e) => console.log('clicked', node.id)}
-                        >
-                            {node.id}
-                        </div>
-                    ))}
+            <Content>{apps && <Graph apps={apps} onNodeClick={handleClick} />}</Content>
+            {anchorEl && (
+                <Presentation
+                    onClick={() => {
+                        setAnchorEl(undefined);
+                        forceUpdate();
+                    }}
+                />
+            )}
+            <Popover
+                anchorEl={anchorEl}
+                ref={popperRef}
+                style={styles.popper}
+                {...attributes.popper}
+            >
+                <div style={{ display: 'flex', gap: 8 }}>
+                    <span style={{ fontSize: 32 }}>{openApp.current?.name}</span>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            fontSize: 12,
+                            gap: 4,
+                            marginLeft: 'auto',
+                        }}
+                    >
+                        {openApp.current?.live && <a href={openApp.current?.live}>Live</a>}
+                        {openApp.current?.src && <a href={openApp.current?.src}>Source</a>}
+                    </div>
                 </div>
-            </Content>
-            {/* <div id="scrolltrigger" ref={scrollRef} style={{ height: 1 }}></div> */}
+                <p>{openApp.current?.description}</p>
+            </Popover>
         </ThemeProvider>
     );
 };

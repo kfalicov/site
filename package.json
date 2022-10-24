@@ -3,15 +3,17 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@popperjs/core": "^2.11.6",
         "d3": "^7.6.1",
         "eslint": "^6.6.0",
         "firebase": "^9.12.1",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
         "react-intersection-observer": "^8.27.1",
-        "react-scripts": "3.4.3",
+        "react-popper": "^2.3.0",
+        "react-scripts": "^5.0.1",
         "react-scroll-percentage": "^4.2.0",
-        "styled-components": "^5.1.1"
+        "styled-components": "^5.3.6"
     },
     "devDependencies": {
         "@testing-library/jest-dom": "^4.2.4",
@@ -29,9 +31,6 @@
         "build": "react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
-    },
-    "eslintConfig": {
-        "extends": "react-app"
     },
     "browserslist": {
         "production": [

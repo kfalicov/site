@@ -6,14 +6,29 @@ export const GlobalStyles = createGlobalStyle`
     transition: background 140ms ${({ theme }) => theme.easing.easeOutSine}, 
       color 140ms ${({ theme }) => theme.easing.easeOutSine};
   }
+  a{
+    color:${({ theme }) => theme.palette.text.default};
+    &:visited {
+      color:${({ theme }) => theme.palette.text.secondary};
+    }
+  }
+  p{
+    margin:4px;
+  }
   button {
     background: transparent;
     color: ${({ theme }) => theme.palette.text.default};
     text-transform: uppercase;
-    &:hover{
-      background: ${({ theme }) => theme.palette.background.hover};
-    };
-    &:active{
+    &:hover:after {
+          position: absolute;
+          inset: 0;
+          content: '';
+          background: ${({ theme }) => theme.palette.background.hover};
+  }
+    &:active:after{
+      position: absolute;
+      inset: 0;
+      content: '';
       background: ${({ theme }) => theme.palette.background.focus};
     };
   }
